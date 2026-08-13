@@ -26,7 +26,6 @@
 <body>
     <div class="dashboard-wrapper">
         <h1>Painel de Cupons de Desconto</h1>
-
         <div class="btn-container">
             <button onclick="exportToExcel()">Exportar para Excel (CSV)</button>
         </div>
@@ -37,7 +36,6 @@
                 <p>Ativações: <span class="value">14</span> | Compras: <span class="value">247</span></p>
                 <p>Valor Total: <span class="value">R$ 65,674.14</span> | Desconto Total: <span class="value">R$ 4,186.49</span></p>
             </div>
-
             <div class="card top3">
                 <h2>TOP 3 MESES (MAIORES COMPRAS)</h2>
                 <ol>
@@ -49,112 +47,82 @@
         </div>
 
         <div class="months-container">
+            
             <div class="card">
                 <h2>JANEIRO</h2>
                 <p>Ativações: <span class="value">1</span></p>
                 <p>Compras: <span class="value">14</span></p>
                 <p>Valor: <span class="value">R$ 4,628.58</span></p>
                 <p>Desconto: <span class="value">R$ 140.00</span></p>
+                <p>Incentivo: <span class="value">3.02%</span></p>
             </div>
+    
             <div class="card">
                 <h2>FEVEREIRO</h2>
                 <p>Ativações: <span class="value">2</span></p>
                 <p>Compras: <span class="value">23</span></p>
                 <p>Valor: <span class="value">R$ 5,389.96</span></p>
                 <p>Desconto: <span class="value">R$ 345.00</span></p>
+                <p>Incentivo: <span class="value">6.4%</span></p>
             </div>
+    
             <div class="card">
                 <h2>MARÇO</h2>
                 <p>Ativações: <span class="value">2</span></p>
                 <p>Compras: <span class="value">80</span></p>
                 <p>Valor: <span class="value">R$ 21,581.76</span></p>
                 <p>Desconto: <span class="value">R$ 1,017.00</span></p>
+                <p>Incentivo: <span class="value">4.71%</span></p>
             </div>
+    
             <div class="card">
                 <h2>ABRIL</h2>
                 <p>Ativações: <span class="value">2</span></p>
                 <p>Compras: <span class="value">32</span></p>
                 <p>Valor: <span class="value">R$ 6,223.80</span></p>
                 <p>Desconto: <span class="value">R$ 480.00</span></p>
+                <p>Incentivo: <span class="value">7.71%</span></p>
             </div>
+    
             <div class="card">
                 <h2>MAIO</h2>
                 <p>Ativações: <span class="value">1</span></p>
                 <p>Compras: <span class="value">24</span></p>
                 <p>Valor: <span class="value">R$ 6,675.41</span></p>
                 <p>Desconto: <span class="value">R$ 360.00</span></p>
+                <p>Incentivo: <span class="value">5.39%</span></p>
             </div>
+    
             <div class="card">
                 <h2>JUNHO</h2>
                 <p>Ativações: <span class="value">4</span></p>
                 <p>Compras: <span class="value">49</span></p>
                 <p>Valor: <span class="value">R$ 15,674.88</span></p>
                 <p>Desconto: <span class="value">R$ 1,474.49</span></p>
+                <p>Incentivo: <span class="value">9.41%</span></p>
             </div>
+    
             <div class="card">
                 <h2>JULHO</h2>
                 <p>Ativações: <span class="value">2</span></p>
                 <p>Compras: <span class="value">25</span></p>
                 <p>Valor: <span class="value">R$ 5,499.75</span></p>
                 <p>Desconto: <span class="value">R$ 370.00</span></p>
+                <p>Incentivo: <span class="value">6.73%</span></p>
             </div>
-            <div class="card">
-                <h2>AGOSTO</h2>
-                <p>Ativações: <span class="value">0</span></p>
-                <p>Compras: <span class="value">0</span></p>
-                <p>Valor: <span class="value">R$ 0.00</span></p>
-                <p>Desconto: <span class="value">R$ 0.00</span></p>
-            </div>
-            <div class="card">
-                <h2>SETEMBRO</h2>
-                <p>Ativações: <span class="value">0</span></p>
-                <p>Compras: <span class="value">0</span></p>
-                <p>Valor: <span class="value">R$ 0.00</span></p>
-                <p>Desconto: <span class="value">R$ 0.00</span></p>
-            </div>
-            <div class="card">
-                <h2>OUTUBRO</h2>
-                <p>Ativações: <span class="value">0</span></p>
-                <p>Compras: <span class="value">0</span></p>
-                <p>Valor: <span class="value">R$ 0.00</span></p>
-                <p>Desconto: <span class="value">R$ 0.00</span></p>
-            </div>
-            <div class="card">
-                <h2>NOVEMBRO</h2>
-                <p>Ativações: <span class="value">0</span></p>
-                <p>Compras: <span class="value">0</span></p>
-                <p>Valor: <span class="value">R$ 0.00</span></p>
-                <p>Desconto: <span class="value">R$ 0.00</span></p>
-            </div>
-            <div class="card">
-                <h2>DEZEMBRO</h2>
-                <p>Ativações: <span class="value">0</span></p>
-                <p>Compras: <span class="value">0</span></p>
-                <p>Valor: <span class="value">R$ 0.00</span></p>
-                <p>Desconto: <span class="value">R$ 0.00</span></p>
-            </div>
+    
         </div>
     </div>
-
     <script>
         function exportToExcel() {
-            let csv = "Mes,Ativacoes,Compras,ValorCompras,Desconto\n";
-            const data = [
-                ["Janeiro", 1, 14, 4628.58, 140.00],
-                ["Fevereiro", 2, 23, 5389.96, 345.00],
-                ["Março", 2, 80, 21581.76, 1017.00],
-                ["Abril", 2, 32, 6223.80, 480.00],
-                ["Maio", 1, 24, 6675.41, 360.00],
-                ["Junho", 4, 49, 15674.88, 1474.49],
-                ["Julho", 2, 25, 5499.75, 370.00]
-            ];
+            let csv = "Mes,Ativacoes,Compras,ValorCompras,Desconto,PercentualIncentivo\n";
+            const data = [['Janeiro', 1, 14, 4628.58, 140.0, 3.02], ['Fevereiro', 2, 23, 5389.96, 345.0, 6.4], ['Março', 2, 80, 21581.76, 1017.0, 4.71], ['Abril', 2, 32, 6223.8, 480.0, 7.71], ['Maio', 1, 24, 6675.41, 360.0, 5.39], ['Junho', 4, 49, 15674.88, 1474.49, 9.41], ['Julho', 2, 25, 5499.75, 370.0, 6.73]];
             data.forEach(row => csv += row.join(",") + "\n");
-            
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.setAttribute('href', url);
-            a.setAttribute('download', 'dados_cupons.csv');
+            a.setAttribute('download', 'dados_cupons_com_incentivo.csv');
             a.click();
         }
     </script>
