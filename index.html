@@ -33,15 +33,15 @@
         <div class="top-section">
             <div class="card consolidado">
                 <h2>CONSOLIDADO ANUAL</h2>
-                <p>Ativações: <span class="value">16</span> | Compras: <span class="value">293</span></p>
-                <p>Valor Total: <span class="value">R$ 78,735.58</span> | Desconto Total: <span class="value">R$ 5,021.49</span></p>
+                <p>Ativações: <span class="value">18</span> | Compras: <span class="value">310</span></p>
+                <p>Valor Total: <span class="value">R$ 81,617.21</span> | Desconto Total: <span class="value">R$ 5,271.49</span></p>
             </div>
             <div class="card top3">
                 <h2>TOP 3 MESES (MAIORES COMPRAS)</h2>
                 <ol>
                     <li><span class="value">MARÇO</span>: 80 compras (R$ 21,581.76)</li>
+                    <li><span class="value">AGOSTO</span>: 63 compras (R$ 15,943.07)</li>
                     <li><span class="value">JUNHO</span>: 49 compras (R$ 15,674.88)</li>
-                    <li><span class="value">AGOSTO</span>: 46 compras (R$ 13,061.44)</li>
                 </ol>
             </div>
         </div>
@@ -113,11 +113,11 @@
     
             <div class="card">
                 <h2>AGOSTO</h2>
-                <p>Ativações: <span class="value">2</span></p>
-                <p>Compras: <span class="value">46</span></p>
-                <p>Valor: <span class="value">R$ 13,061.44</span></p>
-                <p>Desconto: <span class="value">R$ 835.00</span></p>
-                <p>Incentivo: <span class="value">6.39%</span></p>
+                <p>Ativações: <span class="value">4</span></p>
+                <p>Compras: <span class="value">63</span></p>
+                <p>Valor: <span class="value">R$ 15,943.07</span></p>
+                <p>Desconto: <span class="value">R$ 1,085.00</span></p>
+                <p>Incentivo: <span class="value">6.81%</span></p>
             </div>
     
             <div class="card">
@@ -161,13 +161,13 @@
     <script>
         function exportToExcel() {
             let csv = "Mes,Ativacoes,Compras,ValorCompras,Desconto,PercentualIncentivo\n";
-            const data = [['Janeiro', 1, 14, 4628.58, 140.0, 3.02], ['Fevereiro', 2, 23, 5389.96, 345.0, 6.4], ['Março', 2, 80, 21581.76, 1017.0, 4.71], ['Abril', 2, 32, 6223.8, 480.0, 7.71], ['Maio', 1, 24, 6675.41, 360.0, 5.39], ['Junho', 4, 49, 15674.88, 1474.49, 9.41], ['Julho', 2, 25, 5499.75, 370.0, 6.73], ['Agosto', 2, 46, 13061.44, 835.0, 6.39], ['Setembro', 0, 0, 0.0, 0.0, 0.0], ['Outubro', 0, 0, 0.0, 0.0, 0.0], ['Novembro', 0, 0, 0.0, 0.0, 0.0], ['Dezembro', 0, 0, 0.0, 0.0, 0.0]];
+            const data = [['Janeiro', 1, 14, 4628.58, 140.0, 3.02], ['Fevereiro', 2, 23, 5389.96, 345.0, 6.4], ['Março', 2, 80, 21581.76, 1017.0, 4.71], ['Abril', 2, 32, 6223.8, 480.0, 7.71], ['Maio', 1, 24, 6675.41, 360.0, 5.39], ['Junho', 4, 49, 15674.88, 1474.49, 9.41], ['Julho', 2, 25, 5499.75, 370.0, 6.73], ['Agosto', 4, 63, 15943.07, 1085.0, 6.81], ['Setembro', 0, 0, 0.0, 0.0, 0.0], ['Outubro', 0, 0, 0.0, 0.0, 0.0], ['Novembro', 0, 0, 0.0, 0.0, 0.0], ['Dezembro', 0, 0, 0.0, 0.0, 0.0]];
             data.forEach(row => csv += row.join(",") + "\n");
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.setAttribute('href', url);
-            a.setAttribute('download', 'dados_cupons_agosto.csv');
+            a.setAttribute('download', 'dados_cupons_agosto_atualizado.csv');
             a.click();
         }
     </script>
