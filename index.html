@@ -37,7 +37,7 @@
         }
 
         .sub-header { color: var(--text-dim); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; }
-        h1 { font-size: 2rem; margin: 5px 0 10px 0; font-weight: 800; }
+        h1 { font-size: 2.2rem; margin: 5px 0 10px 0; font-weight: 800; }
 
         .status-badges { display: flex; gap: 10px; }
         .badge {
@@ -54,7 +54,6 @@
         .dot { height: 10px; width: 10px; border-radius: 50%; background-color: var(--green); box-shadow: 0 0 10px var(--green); animation: pulse 2s infinite; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        /* Botão Exportar */
         .btn-export {
             background: var(--green);
             color: white;
@@ -66,28 +65,26 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: 0.3s;
         }
-        .btn-export:hover { filter: brightness(1.2); }
 
-        /* Card de Soma Geral */
+        /* Soma Geral */
         .total-geral-container {
             background: linear-gradient(145deg, #1e1b4b, #0d1117);
             padding: 25px;
             border-radius: 15px;
             border: 1px solid var(--purple);
             margin-bottom: 30px;
-            display: flex;
-            justify-content: space-around;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             text-align: center;
         }
-        .total-item h3 { color: var(--text-dim); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 10px; }
+        .total-item h3 { color: var(--text-dim); font-size: 0.75rem; text-transform: uppercase; margin-bottom: 10px; }
         .total-item p { font-size: 1.8rem; font-weight: 800; color: var(--purple); margin: 0; }
 
         /* Grid de Meses */
         .month-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4 cards por linha */
+            grid-template-columns: repeat(4, 1fr);
             gap: 20px;
         }
 
@@ -96,9 +93,9 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 20px;
-            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
         }
-        .month-card:hover { border-color: var(--blue); transform: translateY(-5px); }
 
         .month-name {
             font-size: 1.2rem;
@@ -109,29 +106,31 @@
             margin-bottom: 15px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
 
         .data-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             font-size: 0.9rem;
         }
         .data-label { color: var(--text-dim); }
         .data-value { font-weight: 600; }
 
         .invest-box {
-            margin-top: 15px;
-            padding: 10px;
+            margin-top: auto;
+            padding: 12px;
             background: #0d1117;
-            border-radius: 6px;
+            border-radius: 8px;
             text-align: center;
+            border: 1px solid #23863644;
         }
-        .invest-label { font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 2px; }
-        .invest-value { font-size: 1.2rem; font-weight: 800; color: var(--green); }
+        .invest-label { font-size: 0.65rem; color: var(--text-dim); display: block; margin-bottom: 2px; text-transform: uppercase; }
+        .invest-value { font-size: 1.3rem; font-weight: 800; color: #3fb950; }
 
-        @media (max-width: 1100px) { .month-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 600px) { .month-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 1100px) { .month-grid, .total-geral-container { grid-template-columns: repeat(2, 1fr); gap: 15px; } }
+        @media (max-width: 600px) { .month-grid, .total-geral-container { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -143,7 +142,7 @@
                 <h1>ANÁLISE DE CUPONS APLICADOS</h1>
                 <div class="status-badges">
                     <div class="badge"><span class="dot"></span> Sistema Online</div>
-                    <div id="sync-badge" class="badge"><i class="fas fa-sync fa-spin"></i> Sincronizando...</div>
+                    <div id="sync-badge" class="badge"><i class="fas fa-sync fa-spin"></i> Conectando...</div>
                 </div>
             </div>
             <button class="btn-export" onclick="exportExcel()">
@@ -151,151 +150,19 @@
             </button>
         </header>
 
-        <!-- SOMA GERAL -->
         <div class="total-geral-container" id="total-geral">
             <div class="total-item">
                 <h3>Qtd Total Compras</h3>
-                <p id="total-qtd">-</p>
+                <p id="total-qtd">0</p>
             </div>
             <div class="total-item">
                 <h3>Valor Total Compras</h3>
-                <p id="total-valor">-</p>
+                <p id="total-valor">R$ 0,00</p>
             </div>
             <div class="total-item">
                 <h3>Total Descontos</h3>
-                <p id="total-desconto">-</p>
+                <p id="total-desconto">R$ 0,00</p>
             </div>
             <div class="total-item">
                 <h3>Investimento Médio</h3>
-                <p id="total-invest">-</p>
-            </div>
-        </div>
-
-        <!-- GRID DE MESES -->
-        <div class="month-grid" id="month-grid">
-            <!-- Cards gerados via JS -->
-        </div>
-    </div>
-
-    <script>
-        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQhPDzwfLH9O3OAunJRmHiich08Q-rpQaoIn1607LY2MG1dBmBxFArnI3QYr6WMY2wy00D1TPHbMGLm/pub?output=csv';
-        const mesesNomes = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-        
-        let dadosAgrupados = [];
-
-        async function fetchData() {
-            Papa.parse(SHEET_URL, {
-                download: true,
-                header: true,
-                dynamicTyping: true,
-                skipEmptyLines: true,
-                complete: function(results) {
-                    processarDados(results.data);
-                }
-            });
-        }
-
-        function processarDados(data) {
-            // Criar estrutura para os 12 meses
-            const meses = {};
-            
-            // Inicializar meses vazios
-            mesesNomes.forEach(m => {
-                meses[m] = { qtd: 0, valor: 0, desconto: 0 };
-            });
-
-            let gQtd = 0, gValor = 0, gDesconto = 0;
-
-            data.forEach(row => {
-                if (row.DATA) {
-                    const partes = row.DATA.split('/');
-                    const mesIndex = parseInt(partes[1]) - 1;
-                    const nomeMes = mesesNomes[mesIndex];
-
-                    if (nomeMes) {
-                        // Somar valores (ajuste os nomes das colunas se necessário)
-                        const qtd = row['QTD COMPRA'] || 0;
-                        const valor = row['VALOR EM COMPRAS'] || 0;
-                        const desconto = row['VALOR DO DESCONTO'] || 0;
-
-                        meses[nomeMes].qtd += qtd;
-                        meses[nomeMes].valor += valor;
-                        meses[nomeMes].desconto += desconto;
-
-                        gQtd += qtd;
-                        gValor += valor;
-                        gDesconto += desconto;
-                    }
-                }
-            });
-
-            atualizarGeral(gQtd, gValor, gDesconto);
-            renderizarCards(meses);
-            dadosAgrupados = meses; // Para exportar
-            document.getElementById('sync-badge').innerHTML = `<i class="far fa-clock"></i> Sincronizado: ${new Date().toLocaleTimeString()}`;
-        }
-
-        function atualizarGeral(q, v, d) {
-            document.getElementById('total-qtd').innerText = q.toLocaleString();
-            document.getElementById('total-valor').innerText = v.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-            document.getElementById('total-desconto').innerText = d.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-            const invest = v > 0 ? ((d / v) * 100).toFixed(2) : 0;
-            document.getElementById('total-invest').innerText = invest + '%';
-        }
-
-        function renderizarCards(meses) {
-            const grid = document.getElementById('month-grid');
-            grid.innerHTML = '';
-
-            mesesNomes.forEach(nome => {
-                const m = meses[nome];
-                const invest = m.valor > 0 ? ((m.desconto / m.valor) * 100).toFixed(2) : "0.00";
-
-                grid.innerHTML += `
-                    <div class="month-card">
-                        <div class="month-name">
-                            ${nome.toUpperCase()}
-                            <i class="fas fa-ticket-alt" style="font-size: 0.8rem; opacity: 0.5;"></i>
-                        </div>
-                        <div class="data-row">
-                            <span class="data-label">Qtd de Compra:</span>
-                            <span class="data-value">${m.qtd.toLocaleString()}</span>
-                        </div>
-                        <div class="data-row">
-                            <span class="data-label">Valor em Compras:</span>
-                            <span class="data-value">${m.valor.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</span>
-                        </div>
-                        <div class="data-row">
-                            <span class="data-label">Valor Desconto:</span>
-                            <span class="data-value">${m.desconto.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</span>
-                        </div>
-                        <div class="invest-box">
-                            <span class="invest-label">INVESTIMENTO NO MÊS</span>
-                            <span class="invest-value">${invest}%</span>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function exportExcel() {
-            // Transforma o objeto de meses em array para exportar
-            const exportData = mesesNomes.map(nome => ({
-                Mês: nome,
-                'Qtd Compra': dadosAgrupados[nome].qtd,
-                'Valor Compras': dadosAgrupados[nome].valor,
-                'Valor Desconto': dadosAgrupados[nome].desconto,
-                '% Investimento': dadosAgrupados[nome].valor > 0 ? ((dadosAgrupados[nome].desconto / dadosAgrupados[nome].valor) * 100).toFixed(2) + '%' : '0%'
-            }));
-
-            const ws = XLSX.utils.json_to_sheet(exportData);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Cupons_Mensal");
-            XLSX.writeFile(wb, "Relatorio_Cupons_Pinheiro.xlsx");
-        }
-
-        fetchData();
-        setInterval(fetchData, 60000);
-    </script>
-</body>
-</html>
+                <p id="total-
