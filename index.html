@@ -95,6 +95,7 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
+            min-height: 220px;
         }
 
         .month-name {
@@ -129,8 +130,8 @@
         .invest-label { font-size: 0.65rem; color: var(--text-dim); display: block; margin-bottom: 2px; text-transform: uppercase; }
         .invest-value { font-size: 1.3rem; font-weight: 800; color: #3fb950; }
 
-        @media (max-width: 1100px) { .month-grid, .total-geral-container { grid-template-columns: repeat(2, 1fr); gap: 15px; } }
-        @media (max-width: 600px) { .month-grid, .total-geral-container { grid-template-columns: 1fr; } }
+        @media (max-width: 1100px) { .month-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .month-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -142,7 +143,7 @@
                 <h1>ANÁLISE DE CUPONS APLICADOS</h1>
                 <div class="status-badges">
                     <div class="badge"><span class="dot"></span> Sistema Online</div>
-                    <div id="sync-badge" class="badge"><i class="fas fa-sync fa-spin"></i> Conectando...</div>
+                    <div id="sync-badge" class="badge"><i class="fas fa-sync fa-spin"></i> Sincronizando...</div>
                 </div>
             </div>
             <button class="btn-export" onclick="exportExcel()">
@@ -156,7 +157,7 @@
                 <p id="total-qtd">0</p>
             </div>
             <div class="total-item">
-                <h3>Valor Total Compras</h3>
+                <h3>Valor Total Vendas</h3>
                 <p id="total-valor">R$ 0,00</p>
             </div>
             <div class="total-item">
@@ -165,4 +166,125 @@
             </div>
             <div class="total-item">
                 <h3>Investimento Médio</h3>
-                <p id="total-
+                <p id="total-invest">0%</p>
+            </div>
+        </div>
+
+        <div class="month-grid" id="month-grid"></div>
+    </div>
+
+    <script>
+        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQhPDzwfLH9O3OAunJRmHiich08Q-rpQaoIn1607LY2MG1dBmBxFArnI3QYr6WMY2wy00D1TPHbMGLm/pub?output=csv';
+        const mesesNomes = ["JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"];
+        let dadosGlobais = {};
+
+        // Função para limpar números (converte "4.628,58" para 4628.58)
+        function parseNum(valor) {
+            if (!valor) return 0;
+            if (typeof valor === 'number') return valor;
+            // Remove R$, tira o ponto de milhar e troca vírgula decimal por ponto
+            let limpo = valor.toString().replace(/R\$/g, '').replace(/\./g, '').replace(',', '.').trim();
+            return parseFloat(limpo) || 0;
+        }
+
+        async function fetchData() {
+            Papa.parse(SHEET_URL, {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    processarDados(results.data);
+                }
+            });
+        }
+
+        function processarDados(data) {
+            const meses = {};
+            mesesNomes.forEach(m => meses[m] = { qtd: 0, valor: 0, desconto: 0 });
+
+            let gQtd = 0, gValor = 0, gDesconto = 0;
+
+            data.forEach(row => {
+                // Pega o nome do mês da coluna "MES"
+                const mesPlanilha = row['MES'] ? row['MES'].toString().toUpperCase().trim() : null;
+                
+                if (mesPlanilha && meses[mesPlanilha]) {
+                    const q = parseNum(row['QTD DE COMPRAS']);
+                    const v = parseNum(row['VALOR DA VENDA']);
+                    const d = parseNum(row['DESCONTO']);
+
+                    meses[mesPlanilha].qtd += q;
+                    meses[mesPlanilha].valor += v;
+                    meses[mesPlanilha].desconto += d;
+
+                    gQtd += q;
+                    gValor += v;
+                    gDesconto += d;
+                }
+            });
+
+            dadosGlobais = meses;
+            atualizarInterface(meses, gQtd, gValor, gDesconto);
+            document.getElementById('sync-badge').innerHTML = `<i class="far fa-clock"></i> Atualizado: ${new Date().toLocaleTimeString()}`;
+        }
+
+        function atualizarInterface(meses, q, v, d) {
+            // Topo
+            document.getElementById('total-qtd').innerText = q.toLocaleString('pt-BR');
+            document.getElementById('total-valor').innerText = v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('total-desconto').innerText = d.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('total-invest').innerText = (v > 0 ? ((d / v) * 100).toFixed(2) : 0) + '%';
+
+            // Cards
+            const grid = document.getElementById('month-grid');
+            grid.innerHTML = '';
+            mesesNomes.forEach(nome => {
+                const m = meses[nome];
+                const invest = m.valor > 0 ? ((m.desconto / m.valor) * 100).toFixed(2) : "0.00";
+
+                grid.innerHTML += `
+                    <div class="month-card">
+                        <div class="month-name">
+                            ${nome}
+                            <i class="fas fa-ticket-alt" style="font-size: 0.8rem; opacity: 0.3;"></i>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Qtd de Compra</span>
+                            <span class="data-value">${m.qtd.toLocaleString('pt-BR')}</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Valor da Venda</span>
+                            <span class="data-value">${m.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Desconto</span>
+                            <span class="data-value">${m.desconto.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                        </div>
+                        <div class="invest-box">
+                            <span class="invest-label">% Investimento</span>
+                            <span class="invest-value">${invest}%</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function exportExcel() {
+            const exportArr = mesesNomes.map(m => ({
+                Mês: m,
+                'Qtd Compras': dadosGlobais[m].qtd,
+                'Valor Venda': dadosGlobais[m].valor,
+                'Desconto': dadosGlobais[m].desconto,
+                '% Investimento': dadosGlobais[m].valor > 0 ? ((dadosGlobais[m].desconto / dadosGlobais[m].valor) * 100).toFixed(2) + '%' : '0%'
+            }));
+            const ws = XLSX.utils.json_to_sheet(exportArr);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Cupons");
+            XLSX.writeFile(wb, "Relatorio_Cupons_Pinheiro.xlsx");
+        }
+
+        fetchData();
+        setInterval(fetchData, 60000);
+    </script>
+</body>
+</html>
